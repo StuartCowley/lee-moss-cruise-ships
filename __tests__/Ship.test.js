@@ -4,35 +4,51 @@ const Port = require("../src/Port.js");
 const Itinerary = require("../src/Itinerary.js");
 
 describe("Ship", () => {
-  xit("can be instantiated", () => {
-    expect(new Ship()).toBeInstanceOf(Object);
+  let ship;
+  let dover;
+  let calais;
+  let itinerary;
+
+  beforeEach(() => {
+    dover = new Port("Dover");
+    calais = new Port("Calais");
+    itinerary = new Itinerary([dover, calais]);
+    ship = new Ship(itinerary);
   });
-});
 
-xit("it has a starting port", () => {
-  const port = new Port("Dover");
-  const itinerary = new Itinerary([port]);
-  const ship = new Ship(port);
-  expect(ship.currentPort).toBe(port);
-});
+  describe("Ship constructor", () => {
+    xit("can be instantiated", () => {
+      expect(Ship).toBeInstanceOf(Object);
+    });
 
-xit("can set sail", () => {
-  const port = new Port("Dover");
-  const itinerary = new Itinerary([port]);
-  const ship = new Ship(port);
-  ship.setSail();
-  expect(ship.currentPort).toBeFalsy();
-  expect(ship.previousPort).toBe(port);
-});
+    xit("it has a starting port", () => {
+      expect(ship.currentPort).toBe(dover);
+    });
 
-xit("can dock at a different port", () => {
-  const dover = new Port("Dover");
-  const calais = new Port("Calais");
-  const itinerary = new Itinerary([dover, calais]);
-  const ship = new Ship(itinerary);
+    xit("can set sail", () => {
+      ship.setSail();
 
-  ship.setSail();
-  ship.dock();
+      expect(ship.currentPort).toBeFalsy();
+      expect(dover.ships).not.toContain(ship);
+    });
 
-  expect(ship.currentPort).toBe("Calais");
+    xit("can dock at a different port", () => {
+      ship.setSail();
+      ship.dock();
+
+      expect(calais.ships).toContain(ship);
+      expect(ship.currentPort).toBe("Calais");
+    });
+
+    xit("can't sail further than its itinerary", () => {
+      ship.setSail();
+      ship.dock();
+
+      expect(() => ship.setSail()).toThrowError("End of itinerary reached");
+    });
+
+    xit("gets added to port on instantiation", () => {
+      expect(dover.ships).toContain(ship);
+    });
+  });
 });

@@ -1,4 +1,4 @@
-const Itinerary = require("../src/Itinerary.js");
+const Itinerary = require("../src/itinerary");
 
 describe("Itinerary", () => {
   xit("can be instantiated", () => {
